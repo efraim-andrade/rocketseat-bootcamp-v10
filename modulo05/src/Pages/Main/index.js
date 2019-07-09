@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 
 import api from '../../services/api';
+import Container from '../../Components/Container';
 
-import { Container, Form, SubmitButton, List } from './styles';
+import { Form, SubmitButton, List } from './styles';
 
 export default function Main() {
   const [newRepo, setNewRepo] = useState('');
@@ -12,12 +13,12 @@ export default function Main() {
   const [repositories, setRepositories] = useState([]);
 
   useEffect(() => {
-    const storageRepos = localStorage.getItem('repositories')
+    const storageRepos = localStorage.getItem('repositories');
 
-    if(storageRepos) {
-      setRepositories(JSON.parse(localStorage.getItem('repositories')))
+    if (storageRepos) {
+      setRepositories(JSON.parse(localStorage.getItem('repositories')));
     }
-  })
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -32,9 +33,12 @@ export default function Main() {
 
       setNewRepo('');
       setRepositories([...repositories, data]);
-      localStorage.setItem('repositories', JSON.stringify([...repositories, data]))
+      localStorage.setItem(
+        'repositories',
+        JSON.stringify([...repositories, data])
+      );
     } catch (error) {
-      alert(error.message)
+      alert(error.message);
     } finally {
       setLoading(false);
     }
@@ -65,15 +69,15 @@ export default function Main() {
       </Form>
 
       <List>
-        {
-          repositories.map(repository => (
-            <li key={repository.name}>
-              <span>{repository.name}</span>
+        {repositories.map(repository => (
+          <li key={repository.name}>
+            <span>{repository.name}</span>
 
-              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>Detalhes</Link>
-            </li>
-          ))
-        }
+            <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+              Detalhes
+            </Link>
+          </li>
+        ))}
       </List>
     </Container>
   );
