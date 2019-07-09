@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -6,12 +5,22 @@ import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import Container from '../../Components/Container';
 
-import { Loading, Owner, IssueList } from './styles';
+import {
+  Loading,
+  Owner,
+  IssueList,
+  Filters,
+  Filter,
+  Actions,
+  Button,
+} from './styles';
 
 export default function Repository({ match }) {
-  const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState({});
   const [loading, setLoading] = useState(true);
+  const [stateType, setStateType] = useState('all');
+  const [repository, setRepository] = useState({});
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function fetchRepository() {
@@ -23,8 +32,9 @@ export default function Repository({ match }) {
           await api.get(`/repos/${repoName}`),
           await api.get(`/repos/${repoName}/issues`, {
             params: {
-              state: 'open',
+              state: stateType,
               per_page: 5,
+              page,
             },
           }),
         ]);
@@ -39,7 +49,7 @@ export default function Repository({ match }) {
     }
 
     fetchRepository();
-  }, []);
+  }, [stateType, page]);
 
   return (
     <>
@@ -59,6 +69,29 @@ export default function Repository({ match }) {
             <p>{repository.description}</p>
           </Owner>
 
+          <Filters>
+            <Filter
+              state={stateType === 'all'}
+              onClick={() => setStateType('all')}
+            >
+              Todas
+            </Filter>
+
+            <Filter
+              state={stateType === 'open'}
+              onClick={() => setStateType('open')}
+            >
+              Em aberto
+            </Filter>
+
+            <Filter
+              state={stateType === 'closed'}
+              onClick={() => setStateType('closed')}
+            >
+              Fechadas
+            </Filter>
+          </Filters>
+
           <IssueList>
             {issues.map(issue => (
               <li key={String(issue.id)}>
@@ -66,7 +99,11 @@ export default function Repository({ match }) {
 
                 <div>
                   <strong>
-                    <a href={issue.html_url} target="_blank">
+                    <a
+                      target="_blank"
+                      href={issue.html_url}
+                      rel="noopener noreferrer"
+                    >
                       {issue.title}
                     </a>
                     {issue.labels.map(label => (
@@ -79,6 +116,16 @@ export default function Repository({ match }) {
               </li>
             ))}
           </IssueList>
+
+          <Actions>
+            <Button pages={page - 1} onClick={() => setPage(page - 1)}>
+              Página Anterior
+            </Button>
+
+            <Button pages={issues.length} onClick={() => setPage(page + 1)}>
+              Próxima Página
+            </Button>
+          </Actions>
         </Container>
       )}
     </>

@@ -5,15 +5,15 @@ export const Form = styled.form`
 
   display: flex;
   flex-direction: row;
+`;
 
-  > input {
-    flex: 1;
-    padding: 10px 15px;
-    border: 1px solid #eee;
-    border-radius: 4px;
+export const Input = styled.input`
+  flex: 1;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid ${props => (props.error ? '#f55' : '#eee')};
 
-    font-size: 16px;
-  }
+  font-size: 16px;
 `;
 
 const rotate = keyframes`

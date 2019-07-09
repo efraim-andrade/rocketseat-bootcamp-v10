@@ -45,11 +45,33 @@ export const Owner = styled.header`
   }
 `;
 
-export const IssueList = styled.ul`
-  margin-top: 30px;
+export const Filters = styled.div`
   padding-top: 30px;
+  margin: 30px auto 10px;
   border-top: 1px solid #eee;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > button {
+  }
+`;
+
+export const Filter = styled.button.attrs({
+  type: 'button',
+})`
+  margin: 0 5px;
+  border-radius: 4px;
+  padding: 4px 6px;
+  border: 1px solid #7159c1;
+
+  color: #fff;
+  background: #7159c1;
+  opacity: ${props => (props.state ? 1 : 0.8)};
+`;
+
+export const IssueList = styled.ul`
   > li {
     padding: 15px 10px;
     border-radius: 4px;
@@ -103,5 +125,27 @@ export const IssueList = styled.ul`
         font-size: 12px;
       }
     }
+  }
+`;
+
+export const Actions = styled.div`
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const Button = styled.button.attrs(props => ({
+  disabled: props.pages < 1,
+}))`
+  border-radius: 4px;
+  padding: 10px 14px;
+  border: 1px solid #7159c1;
+
+  color: #fff;
+  background: #7159c1;
+
+  &[disabled] {
+    opacity: 0.5;
   }
 `;

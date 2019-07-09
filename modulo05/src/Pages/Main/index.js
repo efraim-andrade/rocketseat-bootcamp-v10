@@ -5,11 +5,12 @@ import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import api from '../../services/api';
 import Container from '../../Components/Container';
 
-import { Form, SubmitButton, List } from './styles';
+import { Form, SubmitButton, List, Input } from './styles';
 
 export default function Main() {
   const [newRepo, setNewRepo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [repositories, setRepositories] = useState([]);
 
   useEffect(() => {
@@ -25,6 +26,12 @@ export default function Main() {
     setLoading(true);
 
     try {
+      const isDuplicated = repositories.filter(
+        repository => repository.name === newRepo
+      );
+
+      if (isDuplicated) throw new Error('Repositório Duplicado');
+
       const response = await api.get(`repos/${newRepo}`);
 
       const data = {
@@ -32,13 +39,15 @@ export default function Main() {
       };
 
       setNewRepo('');
+      setError(false);
       setRepositories([...repositories, data]);
       localStorage.setItem(
         'repositories',
         JSON.stringify([...repositories, data])
       );
-    } catch (error) {
-      alert(error.message);
+    } catch (err) {
+      alert(err.message);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -52,8 +61,9 @@ export default function Main() {
       </h1>
 
       <Form onSubmit={handleSubmit}>
-        <input
+        <Input
           type="text"
+          error={error}
           value={newRepo}
           placeholder="Adicionar repositório"
           onChange={e => setNewRepo(e.target.value)}
