@@ -19,16 +19,17 @@ import {
 
 function User({ navigation }) {
   const [stars, setStars] = useState([]);
+  const [page, setPage] = useState(2);
   const user = navigation.getParam('user');
 
   useEffect(() => {
     async function fetchUserInfo() {
-      const user = navigation.getParam('user');
+      const userInfo = navigation.getParam('user');
 
       try {
-        const { data } = await api.get(`/users/${user.login}/starred`);
+        const { data } = await api.get(`/users/${userInfo.login}/starred`);
 
-        setStars([...data]);
+        setStars(data);
       } catch (err) {
         console.tron.log(err.message);
       }
@@ -36,6 +37,23 @@ function User({ navigation }) {
 
     fetchUserInfo();
   }, []);
+
+  async function loadMore() {
+    const userInfo = navigation.getParam('user');
+
+    try {
+      const { data } = await api.get(`/users/${userInfo.login}/starred`, {
+        params: {
+          page,
+        },
+      });
+
+      setStars([...stars, ...data]);
+      setPage(page + 1);
+    } catch (err) {
+      console.tron.log(err.message);
+    }
+  }
 
   return (
     <Container>
@@ -49,6 +67,8 @@ function User({ navigation }) {
 
       <Stars
         data={stars}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.2}
         keyExtractor={star => String(star.id)}
         renderItem={({ item }) => (
           <Starred>
