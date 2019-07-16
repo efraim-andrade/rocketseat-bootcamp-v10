@@ -10,7 +10,7 @@ import { formatPrice } from "../../util/format";
 
 import { ProductList } from "./styles";
 
-function Home({ addToCart }) {
+function Home({ addToCartRequest, amount }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -41,9 +41,10 @@ function Home({ addToCart }) {
           <strong>{product.title}</strong>
           <span>{product.formatedPrice}</span>
 
-          <button type="button" onClick={() => addToCart(product)}>
+          <button type="button" onClick={() => addToCartRequest(product.id)}>
             <div>
-              <MdAddShoppingCart size={16} color="#fff" /> 3
+              <MdAddShoppingCart size={16} color="#fff" />{" "}
+              {amount[product.id] || 0}
             </div>
 
             <span>ADICIONAR AO CARRINHO</span>
@@ -54,10 +55,18 @@ function Home({ addToCart }) {
   );
 }
 
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+
+    return amount;
+  }, {})
+});
+
 const mapDispatchToProps = dispatch =>
   bindActionCreators(CartActions, dispatch);
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Home);
