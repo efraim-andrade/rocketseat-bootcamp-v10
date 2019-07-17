@@ -1,8 +1,10 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { Router } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
 import "./config/ReactotronConfig";
+import history from "./services/history";
 
 import store from "./store";
 import Routes from "./router";
@@ -12,13 +14,15 @@ import GlobalStyles from "./styles/global";
 export default function App() {
   return (
     <Provider store={store}>
-      <GlobalStyles />
+      <Router history={history}>
+        <GlobalStyles />
 
-      <BrowserRouter>
         <Header />
 
         <Routes />
-      </BrowserRouter>
+
+        <ToastContainer autoClose={3000} />
+      </Router>
     </Provider>
   );
 }
