@@ -1,7 +1,8 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import Route from './Route';
 
-import { Dashboard, Profile, SignIn, SignUp } from '../pages';
+import { Dashboard, Profile, SignIn, SignUp } from '~/pages';
 
 export default function Routes() {
   return (
@@ -9,8 +10,10 @@ export default function Routes() {
       <Route path="/" exact component={SignIn} />
       <Route path="/register" exact component={SignUp} />
 
-      <Route path="/dashboard" exact component={Dashboard} />
-      <Route path="/profile" exact component={Profile} />
+      <Route path="/dashboard" exact component={Dashboard} isPrivate />
+      <Route path="/profile" exact component={Profile} isPrivate />
+
+      <Route path="/" component={() => <h1>404</h1>} />
     </Switch>
   );
 }
