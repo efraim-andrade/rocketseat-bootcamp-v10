@@ -30,7 +30,7 @@ export const Content = styled.div`
       padding: 0 15px;
       margin: 0 0 10px;
       border: 0;
-      border-radius: 4px;
+      border-radius: 12px;
 
       color: #fff;
       background: rgba(0, 0, 0, 0.1);
