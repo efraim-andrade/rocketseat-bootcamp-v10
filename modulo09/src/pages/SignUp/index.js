@@ -31,7 +31,9 @@ export default function SignUp() {
 
       <Form onSubmit={handleSubmit} schema={schema}>
         <Input name="name" placeholder="Seu nome completo" />
+
         <Input name="email" type="email" placeholder="Seu e-mail" />
+
         <Input
           name="password"
           type="password"
